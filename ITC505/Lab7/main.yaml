@@ -1,22 +1,39 @@
-# Server configuration for Mad Lib app
+name: Node.js CI
 
-port: 3000
+on:
+  push:
+    branches:
+      - main
 
-app:
-  # Use body-parser middleware to parse form data
-  useBodyParser: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-  # Static files are served from the public directory
-  useStaticFiles:
-    publicDirectory: public
+    strategy:
+      matrix:
+        node-version: [14.x]
 
-  routes:
-    # GET /ITC505/lab7 - Display the Mad Lib form
-    - path: /ITC505/lab7
-      method: GET
-      handler: serveIndexHtml
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # POST /ITC505/lab7 - Process the Mad Lib form submission
-    - path: /ITC505/lab7
-      method: POST
-      handler: generateMadLibResult
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Run the server
+      run: node server.js
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        branch: gh-pages
+        folder: public
+        cname: your-custom-domain-if-any.com
