@@ -1,0 +1,22 @@
+# Server configuration for Mad Lib app
+
+port: 3000
+
+app:
+  # Use body-parser middleware to parse form data
+  useBodyParser: true
+
+  # Static files are served from the public directory
+  useStaticFiles:
+    publicDirectory: public
+
+  routes:
+    # GET /ITC505/lab7 - Display the Mad Lib form
+    - path: /ITC505/lab7
+      method: GET
+      handler: serveIndexHtml
+
+    # POST /ITC505/lab7 - Process the Mad Lib form submission
+    - path: /ITC505/lab7
+      method: POST
+      handler: generateMadLibResult
